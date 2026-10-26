@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/SOURCES.md
+data/processed/*
+!data/processed/.gitkeep
+forecasts/*
+!forecasts/.gitkeep
+!forecasts/seeds/
+report/*
+!report/.gitkeep
