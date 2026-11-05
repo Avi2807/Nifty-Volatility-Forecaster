@@ -1,0 +1,143 @@
+.scrubber {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.rangeWrap {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Lined up with where the thumb's centre sits on that day, which is inset by half a thumb at each end. */
+.boundary {
+  position: absolute;
+  left: calc(var(--slider-thumb-width) / 2 + (100% - var(--slider-thumb-width)) * var(--boundary));
+  width: var(--border-width);
+  height: var(--slider-thumb-height);
+  background: var(--color-text);
+}
+
+.boundaryNote {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.range {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: var(--hit-target);
+  margin: 0;
+  appearance: none;
+  background: none;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: var(--slider-track-height);
+  background: var(--color-rule);
+}
+
+.range::-moz-range-track {
+  height: var(--slider-track-height);
+  background: var(--color-rule);
+}
+
+.range::-webkit-slider-thumb {
+  width: var(--slider-thumb-width);
+  height: var(--slider-thumb-height);
+  margin-top: calc((var(--slider-thumb-height) - var(--slider-track-height)) / -2);
+  appearance: none;
+  background: var(--color-text);
+  border: 0;
+}
+
+.range::-moz-range-thumb {
+  width: var(--slider-thumb-width);
+  height: var(--slider-thumb-height);
+  background: var(--color-text);
+  border: 0;
+  border-radius: 0;
+}
+
+.step {
+  flex: none;
+  width: var(--hit-target);
+  height: var(--hit-target);
+  border: var(--border-width) solid var(--color-rule);
+  background: none;
+  font-family: var(--font-mono);
+}
+
+.step:hover:not(:disabled) {
+  font-weight: var(--weight-bold);
+  text-decoration: underline;
+}
+
+.step:disabled {
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.jump {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* On a phone the two end dates share a row, with the date picker below them. */
+@media (max-width: 30rem) {
+  .footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer > span:last-child {
+    justify-self: end;
+  }
+
+  .jump {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+}
+
+.dateInput {
+  min-height: var(--hit-target);
+  padding-inline: var(--space-2);
+  border: var(--border-width) solid var(--color-rule);
+  background: none;
+  color: var(--color-text);
+}
+
+.hint {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+@media (hover: none) {
+  .hint {
+    display: none;
+  }
+}

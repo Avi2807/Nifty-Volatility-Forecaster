@@ -1,0 +1,85 @@
+.ticker {
+  position: relative;
+  display: flex;
+  min-height: var(--hit-target);
+  overflow: hidden;
+  border-block: var(--rule-double) double var(--color-rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.track {
+  display: flex;
+  flex: none;
+  width: max-content;
+  animation: slide var(--motion-ticker) linear infinite;
+}
+
+.ticker[data-paused="true"] .track,
+.ticker:hover .track,
+.ticker:focus-within .track {
+  animation-play-state: paused;
+}
+
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 100vw;
+  gap: var(--space-6);
+  padding-inline: var(--space-3);
+  white-space: nowrap;
+}
+
+.item {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.label {
+  color: var(--color-text-secondary);
+}
+
+.value {
+  font-weight: var(--weight-bold);
+}
+
+.pause {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  padding-inline: var(--space-3);
+  border: 0;
+  border-left: var(--border-width) solid var(--color-border);
+  background: var(--color-page);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.pause:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* With motion off there's nothing to pause, and the numbers scroll by hand instead. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker {
+    overflow-x: auto;
+  }
+
+  .track {
+    animation: none;
+  }
+
+  .group[aria-hidden="true"],
+  .pause {
+    display: none;
+  }
+}

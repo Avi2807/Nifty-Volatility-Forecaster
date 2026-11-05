@@ -1,0 +1,140 @@
+/* Set like a newspaper's market data page: heavy rule above, hairlines between, no fills. */
+.frame {
+  margin-bottom: var(--space-5);
+  border-top: var(--rule-heavy) solid var(--color-rule);
+}
+
+.scroller {
+  overflow-x: auto;
+  background: var(--color-page);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.caption {
+  padding-block: var(--space-2);
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+.captionNote {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table td {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.table thead th {
+  border-bottom: var(--border-width) solid var(--color-rule);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.table th:first-child {
+  padding-left: 0;
+  font-weight: var(--weight-regular);
+  text-align: left;
+}
+
+@media (max-width: 75rem) {
+  .table th:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--color-page);
+  }
+}
+
+.table thead th:first-child {
+  font-weight: var(--weight-bold);
+}
+
+.table .winner {
+  color: var(--color-text);
+  font-weight: var(--weight-bold);
+}
+
+.marker {
+  font-size: var(--text-2xs);
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-1);
+  max-width: var(--text-width);
+  margin-bottom: var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* The model ladder: bars set like the tables around them, with square ends and no fills behind. */
+.ladder {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.rung {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 11rem) minmax(0, 1fr) 6.5rem;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.rungTrack {
+  display: block;
+  border-left: var(--border-width) solid var(--color-axis);
+}
+
+.rungBar,
+.rungBarAccent {
+  display: block;
+  height: 0.875rem;
+  background: var(--chart-bar);
+}
+
+.rungBarAccent {
+  background: var(--series-transformer);
+}
+
+.rungValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-align: right;
+}
+
+@media (max-width: 30rem) {
+  .rung {
+    grid-template-columns: minmax(0, 1fr) 6rem;
+    row-gap: 0;
+  }
+
+  .rungTrack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}

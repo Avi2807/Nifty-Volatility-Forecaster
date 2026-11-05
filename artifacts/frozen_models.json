@@ -1,0 +1,8 @@
+{
+  "transformer_nosent_seed1.npz": "8f1a833eab6e6498e32af34cfa0657aae6ae44c28bd80fb06c696bccbeb9bcf0",
+  "transformer_nosent_seed2.npz": "45bac27e595dea9be63f9bb6b77da15517d4deb96296b45b2a98e1d55c40989e",
+  "transformer_nosent_seed3.npz": "6b881f76e512cbd90e02f0245e1b09bc41d2364e723c09e02d75b0daa7da5a77",
+  "transformer_seed1.npz": "74601c703f1270799a3b26a8f49571698d1de7927e23d7dee9b75b73a0516733",
+  "transformer_seed2.npz": "17fbebcd442f304dfdecd6af31ced1e52d070ac7a61d6246970f8a6833b2dfe7",
+  "transformer_seed3.npz": "0b90841464a0959fa43c40ad47717331b2e559737da6c0c5d70384fbdea6dadd"
+}

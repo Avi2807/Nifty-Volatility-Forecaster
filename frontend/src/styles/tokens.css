@@ -1,0 +1,225 @@
+/*
+ * "The Volatility Desk": every visual decision lives here. Components use only these names, and
+ * charts read them at runtime through useTokens, so the whole app restyles from this file.
+ *
+ * Day is the printed page, in :root. Night is the desk's terminal, in [data-theme="night"].
+ * The theme attribute is always set, by the script in index.html and then by useTheme, so
+ * following the system setting doesn't need a second copy of the night values.
+ *
+ * tokens.test.ts checks the text colours against both backgrounds. Run it after changing them.
+ */
+:root {
+  color-scheme: light;
+
+  /* Paper */
+  --color-page: #f6e3d4;
+  --color-surface-raised: #f6e3d4;
+  --color-surface-sunken: #eed6c4;
+  --color-scrim: #f6e3d4;
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --paper-grain-opacity: 0.05;
+
+  /* Ink */
+  --color-text: #1a1612;
+  --color-text-secondary: #5c5048;
+  --color-text-muted: #6a5c52;
+  --color-link: #1a1612;
+  --color-rule: #1a1612;
+  --color-border: #1a161233;
+  --color-column-rule: #1a16121a;
+  --color-grid: #e6d1c0;
+  --color-axis: #8a7a6d;
+  --color-accent: #b3261e;
+  --color-focus: #b3261e;
+
+  /* One mark of highlighter per screen at most, on the replay notice */
+  --highlight-surface: #f2c14e;
+  --highlight-text: #1a1612;
+
+  /* Charts: ink for actuals, the accent for the Transformer, greys and dashes for references */
+  --series-actual: #1a1612;
+  --series-transformer: #b3261e;
+  --series-har: #5c5048;
+  --series-naive: #8a7a6d;
+  --series-vix: #6a5c52;
+  --series-garch: #75675b;
+  --series-mlp: #7f7063;
+  --series-lstm: #4f443c;
+  --series-transformer-nosent: #b3261e;
+
+  /* Status: always with an icon or a label, never colour alone */
+  --status-good: #2f6b4f;
+  --status-critical: #b3261e;
+  --status-critical-text: #b3261e;
+  --status-critical-surface: transparent;
+  --status-warning-surface: #1a1612;
+  --status-warning-text: #f6e3d4;
+
+  /* Chart marks */
+  --chart-bar: #8a7a6d;
+  --chart-breach: #b3261e;
+  --chart-var-line: #1a1612;
+  --chart-selected: #1a1612;
+
+  /* Attention scale: density of ink on paper */
+  --heat-low: #e6cfbd;
+  --heat-mid: #8f7f72;
+  --heat-high: #1a1612;
+
+  /* Skeleton */
+  --skeleton-base: #eed6c4;
+
+  /* Type */
+  --font-serif: "Fraunces Variable", "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", "Söhne", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.5rem;
+  --text-masthead: clamp(2.25rem, 8vw, 5.25rem);
+  --text-headline: clamp(2rem, 4.5vw, 3.5rem);
+  --text-hero-label: clamp(1.625rem, 3.2vw, 2.5rem);
+  --text-hero-number-max: 10.5rem;
+  --text-hero-number-replay-max: 5.5rem;
+  --text-hero-number-fluid: 25cqi;
+  --text-deck: clamp(1.125rem, 1.9vw, 1.5rem);
+  --text-standfirst: 1.1875rem;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+  --weight-headline: 400;
+  --leading-tight: 1.05;
+  --leading-snug: 1.3;
+  --leading-body: 1.55;
+  --tracking-tight: -0.02em;
+  --tracking-number: -0.04em;
+  --tracking-kicker: 0.14em;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --grid-gap: 1.5rem;
+  --content-width: 85rem;
+  --text-width: 68ch;
+  --topbar-height: 2.75rem;
+  --hit-target: 2.75rem;
+
+  /* Rules and shape: square corners throughout */
+  --radius-sm: 0;
+  --border-width: 1px;
+  --rule-heavy: 2px;
+  --rule-double: 4px;
+  --focus-width: 2px;
+  --shadow-tooltip: none;
+
+  /* Sizes */
+  --chart-height: 24rem;
+  --chart-height-compact: 16rem;
+  --breach-strip-height: 0.875rem;
+  --breach-tick-height: 0.625rem;
+  --breach-tick-width: 2px;
+  --table-max-height: 24rem;
+  --strip-height: 4rem;
+  --strip-gap: 2px;
+  --heatmap-width: 34rem;
+  --heatmap-readout-height: 3em;
+  --scale-bar-height: 0.5rem;
+  --diagram-width: 52rem;
+  --diagram-narrow-width: 17rem;
+  --column-min-width: 22rem;
+  --fact-min-width: 14rem;
+  --skeleton-stat-height: 9rem;
+  --legend-key-size: 1.25rem;
+  --legend-bar-width: 0.25rem;
+  --legend-line-height: 2px;
+  --tooltip-key-width: 1rem;
+  --slider-thumb-width: 0.625rem;
+  --slider-thumb-height: 1.5rem;
+  --slider-track-height: 2px;
+  --svg-text-sm: 10px;
+  --svg-text-md: 11px;
+  --svg-text-lg: 16px;
+  --opacity-off: 0.35;
+  --opacity-updating: 0.55;
+
+  /* Layers */
+  --z-sticky: 10;
+  --z-tooltip: 20;
+  --z-grain: 30;
+  --z-skip-link: 40;
+
+  /* Motion: short fades, plus the ticker. Reduced-motion users get neither, see below. */
+  --motion-fast: 180ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ticker: 60s;
+}
+
+:root[data-theme="night"] {
+  color-scheme: dark;
+
+  --color-page: #0e0f0c;
+  --color-surface-raised: #0e0f0c;
+  --color-surface-sunken: #1a1b17;
+  --color-scrim: #0e0f0c;
+  --paper-grain: none;
+  --paper-grain-opacity: 0;
+
+  --color-text: #e8e2d6;
+  --color-text-secondary: #b3ac9e;
+  --color-text-muted: #a39c8e;
+  --color-link: #e8e2d6;
+  --color-rule: #e8e2d6;
+  --color-border: #e8e2d622;
+  --color-column-rule: #e8e2d616;
+  --color-grid: #20211c;
+  --color-axis: #6f695e;
+  --color-accent: #e8a33d;
+  --color-focus: #e8a33d;
+
+  --highlight-surface: transparent;
+  --highlight-text: #e8a33d;
+
+  --series-actual: #e8e2d6;
+  --series-transformer: #e8a33d;
+  --series-har: #a39c8e;
+  --series-naive: #7f786c;
+  --series-vix: #948b7d;
+  --series-garch: #8a8375;
+  --series-mlp: #9c9587;
+  --series-lstm: #b3ac9e;
+  --series-transformer-nosent: #e8a33d;
+
+  --status-good: #5fa37e;
+  --status-critical: #e5534b;
+  --status-critical-text: #e5534b;
+  --status-warning-surface: #e8e2d6;
+  --status-warning-text: #0e0f0c;
+
+  --chart-bar: #7f786c;
+  --chart-breach: #e5534b;
+  --chart-var-line: #e8e2d6;
+  --chart-selected: #e8e2d6;
+
+  --heat-low: #26261f;
+  --heat-mid: #8c877c;
+  --heat-high: #e8e2d6;
+
+  --skeleton-base: #1a1b17;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-ticker: 0s;
+  }
+}

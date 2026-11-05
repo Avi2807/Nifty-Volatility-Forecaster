@@ -1,0 +1,23 @@
+.banner {
+  padding: var(--space-2) var(--gutter);
+  background: var(--status-warning-surface);
+  color: var(--status-warning-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-align: center;
+}
+
+.replay {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* The page's one mark of highlighter */
+.replay strong {
+  display: inline;
+  padding-inline: var(--space-1);
+  background: var(--highlight-surface);
+  color: var(--highlight-text);
+  font-weight: var(--weight-bold);
+  box-decoration-break: clone;
+}

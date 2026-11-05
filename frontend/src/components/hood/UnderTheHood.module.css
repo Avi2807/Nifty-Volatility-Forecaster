@@ -1,0 +1,108 @@
+.diagram {
+  margin-bottom: var(--space-5);
+}
+
+.wide {
+  display: block;
+  width: 100%;
+  max-width: var(--diagram-width);
+  height: auto;
+}
+
+.tall {
+  display: none;
+  width: 100%;
+  max-width: var(--diagram-narrow-width);
+  height: auto;
+  margin-inline: auto;
+}
+
+@media (max-width: 40rem) {
+  .wide {
+    display: none;
+  }
+
+  .tall {
+    display: block;
+  }
+}
+
+.box {
+  fill: var(--color-page);
+  stroke: var(--color-rule);
+}
+
+.boxTitle {
+  fill: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: var(--svg-text-lg);
+}
+
+.boxDetail {
+  fill: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--svg-text-sm);
+}
+
+.arrow,
+.wrap {
+  fill: none;
+  stroke: var(--color-rule);
+  stroke-width: 1;
+}
+
+.arrowHead {
+  fill: var(--color-rule);
+}
+
+.figcaption {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--fact-min-width)), 1fr));
+  gap: 0 var(--grid-gap);
+  border-top: var(--rule-heavy) solid var(--color-rule);
+}
+
+.fact {
+  padding-block: var(--space-2) var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.factValue {
+  margin-top: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+}
+
+.factNote {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.departures {
+  margin-top: var(--space-5);
+}
+
+.departuresTitle {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+.departuresList {
+  display: grid;
+  gap: var(--space-1);
+  max-width: var(--text-width);
+  padding-left: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  list-style: disc;
+}

@@ -1,0 +1,137 @@
+{
+  "data_source": "real",
+  "phrasebank_sentences": 4217,
+  "duplicates_removed": 6,
+  "train_sentences": 3368,
+  "holdout_sentences": 843,
+  "vocabulary_size": 6149,
+  "best_epoch": 12,
+  "epochs_run": 27,
+  "holdout": {
+    "accuracy": 0.8054567022538552,
+    "macro_f1": 0.7481448693757623,
+    "precision": [
+      0.8142857142857143,
+      0.8258527827648114,
+      0.75
+    ],
+    "recall": [
+      0.5533980582524272,
+      0.9090909090909091,
+      0.6923076923076923
+    ],
+    "f1": [
+      0.6589595375722543,
+      0.8654750705550328,
+      0.7199999999999999
+    ],
+    "confusion_rows_true_cols_pred": [
+      [
+        57,
+        30,
+        16
+      ],
+      [
+        8,
+        460,
+        38
+      ],
+      [
+        5,
+        67,
+        162
+      ]
+    ]
+  },
+  "holdout_note": "This split also chose the early-stopping epoch, so these figures are slightly optimistic.",
+  "majority_class_accuracy": 0.6002372479240806,
+  "classes": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "top_terms": {
+    "negative": [
+      "down",
+      "decreased",
+      "down from",
+      "decreased to",
+      "fell",
+      "lower",
+      "a profit",
+      "fell to",
+      "decreased by",
+      "mn down",
+      "staff",
+      "jobs",
+      "drop",
+      "dropped",
+      "profit fell"
+    ],
+    "neutral": [
+      "includes",
+      "include",
+      "is",
+      "approximately",
+      "sell",
+      "the deal",
+      "employs",
+      "not",
+      "headquartered",
+      "headquartered in",
+      "on net",
+      "to start",
+      "to sell",
+      "built",
+      "government"
+    ],
+    "positive": [
+      "up from",
+      "increase",
+      "grew",
+      "increased",
+      "rose",
+      "rose to",
+      "mn up",
+      "NUM up",
+      "positive",
+      "signed",
+      "up",
+      "good",
+      "increased by",
+      "profit rose",
+      "improved"
+    ]
+  },
+  "headlines_scored": 79990,
+  "headlines_per_year": {
+    "2015": 6920,
+    "2016": 7028,
+    "2017": 37886,
+    "2018": 8928,
+    "2019": 5120,
+    "2020": 3898,
+    "2021": 3770,
+    "2022": 3994,
+    "2023": 2446
+  },
+  "headline_categories": {
+    "business.india-business": 46393,
+    "business.international-business": 32520,
+    "business": 447,
+    "business.markets.sensex": 139,
+    "business.personal-finance": 112,
+    "business.budget": 112,
+    "india-business-news-wire": 79,
+    "business.faqs.income-tax-faqs": 41,
+    "business.cryptocurrency.bitcoin": 27,
+    "business.startups.companies": 25,
+    "business.markets": 22,
+    "business.markets.ipo": 20,
+    "business.faqs.aadhar-faqs": 15,
+    "business.startups.trend-tracking": 15,
+    "business.cryptocurrency.blockchain": 13,
+    "business.wealth.loans-and-emi": 10
+  },
+  "sessions_with_news": 2085
+}

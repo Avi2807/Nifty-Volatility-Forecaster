@@ -1,0 +1,6 @@
+# Project rule: no machine-learning libraries. Every model is written by hand in NumPy.
+numpy>=1.26,<3
+pandas>=2.1,<3      # CSV loading and date handling only, confined to src/data/loaders.py
+matplotlib>=3.8,<4  # figures only
+fastapi>=0.110      # serving only
+uvicorn>=0.27       # serving only

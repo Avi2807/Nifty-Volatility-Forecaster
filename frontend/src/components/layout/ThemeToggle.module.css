@@ -1,0 +1,26 @@
+.group {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.option {
+  min-height: var(--hit-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  text-underline-offset: 0.3em;
+}
+
+.option:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.option[aria-pressed="true"] {
+  color: var(--color-text);
+  font-weight: var(--weight-bold);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-heavy);
+}

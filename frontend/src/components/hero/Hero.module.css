@@ -1,0 +1,159 @@
+.hero {
+  padding-block: var(--space-5) var(--space-7);
+}
+
+.front,
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5) var(--grid-gap);
+}
+
+.controls {
+  align-items: start;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-rule);
+}
+
+@media (min-width: 60rem) {
+  .front {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .lead {
+    grid-column: span 8;
+  }
+
+  .corrections {
+    grid-column: span 4;
+    margin-left: calc(var(--grid-gap) / -2);
+    padding-left: calc(var(--grid-gap) / 2);
+    border-left: var(--border-width) solid var(--color-rule);
+  }
+
+  .controls {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .controls > :first-child {
+    grid-column: span 4;
+  }
+
+  .controls > :last-child {
+    grid-column: span 8;
+  }
+}
+
+/* The number sizes itself to its column, so it always fits on one line. */
+.lead {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.label {
+  margin-top: var(--space-2);
+  font-size: var(--text-hero-label);
+}
+
+.number,
+.numberReplay {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: min(var(--text-hero-number-max), var(--text-hero-number-fluid));
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-number);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* The live forecast leads the page, so the replay's number steps down. */
+.numberReplay {
+  font-size: min(var(--text-hero-number-replay-max), var(--text-hero-number-fluid));
+}
+
+.deck {
+  margin-top: var(--space-3);
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--text-deck);
+  font-style: italic;
+  line-height: var(--leading-snug);
+}
+
+.leadData {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.corrections {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.correction + .correction {
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.value,
+.valueSmall {
+  margin-top: var(--space-1);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+}
+
+.value {
+  font-size: var(--text-2xl);
+}
+
+.valueSmall {
+  font-size: var(--text-xl);
+}
+
+.note {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: var(--leading-snug);
+}
+
+.data {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.breached,
+.within {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.breached {
+  color: var(--status-critical-text);
+}
+
+.within {
+  color: var(--status-good);
+}
+
+.adjusted {
+  margin-top: var(--space-2);
+  padding-block: var(--space-2);
+  border-block: var(--border-width) solid var(--color-border);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}

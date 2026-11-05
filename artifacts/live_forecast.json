@@ -1,0 +1,57 @@
+{
+  "data_source": "real",
+  "made_at": "2026-11-03T19:42:05+05:30",
+  "model": "transformer_nosent",
+  "date": "2026-11-03",
+  "target_date": "2026-11-04",
+  "forecast": -10.248119434842573,
+  "seed_forecasts": [
+    -10.314702886229142,
+    -10.159763855489476,
+    -10.269891562809105
+  ],
+  "references": {
+    "har": -10.282054812091868,
+    "naive": -10.451791999941037,
+    "vix_implied": -9.229901885485484
+  },
+  "features": {
+    "log_rv": -10.451791999941037,
+    "log_rv_w": -10.264484766669614,
+    "log_rv_m": -9.948435303868301,
+    "parkinson": 6.935278818493339e-05,
+    "ret": 0.01566321559436504,
+    "ret_neg": 0.0,
+    "gap": 0.006016183256489144,
+    "log_vix": 2.7549337870010606,
+    "log_turnover_ratio": 0.2748970566471522,
+    "expiry_next": 0.0,
+    "dow_mon": 0.0,
+    "dow_tue": 1.0,
+    "dow_wed": 0.0,
+    "dow_thu": 0.0,
+    "dow_fri": 0.0
+  },
+  "first_session": "2026-08-07",
+  "sessions_used": 60,
+  "var99": 0.013867719887474848,
+  "nifty_close": 23810.85,
+  "india_vix": 15.72,
+  "turnover_crore": 40323.17,
+  "track_record": {
+    "n_days": 705,
+    "first_date": "2023-07-03",
+    "last_date": "2026-05-13",
+    "var99_breaches": 24,
+    "var99_expected_breaches": 7.05,
+    "var99_rejected": true,
+    "error_band_share": 0.8,
+    "error_band_low": -0.6644592753237759,
+    "error_band_high": 0.7808958447570021
+  },
+  "sources": {
+    "bars": "https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=5m&range=60d",
+    "closing_file": "https://nsearchives.nseindia.com/content/indices/ind_close_all_03112026.csv",
+    "holidays": "https://www.nseindia.com/api/holiday-master?type=trading"
+  }
+}

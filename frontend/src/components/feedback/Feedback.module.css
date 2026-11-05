@@ -1,0 +1,62 @@
+.skeleton {
+  background: var(--skeleton-base);
+}
+
+.line {
+  height: var(--text-md);
+  margin-block: var(--space-2);
+}
+
+.stat {
+  height: var(--skeleton-stat-height);
+}
+
+.chart {
+  height: var(--chart-height);
+}
+
+.error {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--status-critical);
+  background: var(--status-critical-surface);
+  overflow-wrap: anywhere;
+}
+
+.errorTitle {
+  color: var(--status-critical-text);
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+.command {
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.retry {
+  justify-self: start;
+  min-height: var(--hit-target);
+  padding-inline: var(--space-4);
+  border: var(--border-width) solid var(--color-rule);
+  background: none;
+}
+
+.retry:hover {
+  font-weight: var(--weight-bold);
+  text-decoration: underline;
+}
+
+.empty {
+  padding-block: var(--space-3);
+  border-block: var(--border-width) solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-family: var(--font-serif);
+  font-style: italic;
+}

@@ -1,0 +1,290 @@
+.loading {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.content,
+.updating {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6) var(--grid-gap);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content,
+  .updating {
+    transition: opacity var(--motion-fast) var(--motion-ease);
+  }
+}
+
+.updating {
+  opacity: var(--opacity-updating);
+}
+
+@media (min-width: 60rem) {
+  .content,
+  .updating {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .content > :nth-child(1),
+  .updating > :nth-child(1) {
+    grid-column: 1 / -1;
+  }
+
+  .content > :nth-child(2),
+  .updating > :nth-child(2) {
+    grid-column: span 5;
+  }
+
+  .content > :nth-child(3),
+  .updating > :nth-child(3) {
+    grid-column: span 7;
+  }
+}
+
+.block {
+  min-width: 0;
+  padding-top: var(--space-2);
+  border-top: var(--border-width) solid var(--color-rule);
+}
+
+.heading {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+.subheading {
+  margin-bottom: var(--space-2);
+}
+
+.views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.viewButton {
+  min-height: var(--hit-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  text-underline-offset: 0.3em;
+}
+
+.viewButton:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width);
+}
+
+.viewButton[aria-pressed="true"] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-heavy);
+}
+
+.stripFigure {
+  max-width: 100%;
+}
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(22, minmax(0, 1fr));
+  gap: var(--strip-gap);
+}
+
+.stripCell {
+  min-width: 0;
+}
+
+.stripTrack {
+  display: flex;
+  align-items: flex-end;
+  height: var(--strip-height);
+  border-bottom: var(--border-width) solid var(--color-rule);
+}
+
+.stripBar {
+  display: block;
+  width: 100%;
+}
+
+.stripDate {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  white-space: nowrap;
+}
+
+/* Narrow screens have room for one date in seven, the last among them. */
+@media (max-width: 75rem) {
+  .stripCell:not(:nth-child(7n + 1)) .stripDate {
+    visibility: hidden;
+  }
+}
+
+/* The last date is set against the right edge, so it can't overflow the page. */
+.stripCell:last-child .stripDate {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stripCaption {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.readout {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.caution {
+  max-width: var(--text-width);
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.expand {
+  display: block;
+  min-height: var(--hit-target);
+  margin-top: var(--space-2);
+  padding-inline: var(--space-4);
+  border: var(--border-width) solid var(--color-rule);
+  background: none;
+  font-size: var(--text-sm);
+}
+
+.expand:hover {
+  text-decoration: underline;
+}
+
+.heatmap {
+  max-width: var(--heatmap-width);
+  margin-top: var(--space-4);
+}
+
+.heatmapSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.axisLabel {
+  fill: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--svg-text-md);
+}
+
+.heatmapReadout {
+  min-height: var(--heatmap-readout-height);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.scale {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.scaleBar {
+  flex: 1;
+  height: var(--scale-bar-height);
+}
+
+/* A news brief column: a thin rule down the left, and the score as a short signed number. */
+.headlineColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--column-min-width)), 1fr));
+  gap: var(--space-5);
+}
+
+.headlines {
+  display: grid;
+  gap: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: var(--border-width) solid var(--color-rule);
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.score {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-body);
+}
+
+.tableScroller {
+  margin-top: var(--space-3);
+  overflow-x: auto;
+  background: var(--color-page);
+}
+
+.featureTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.featureTable th,
+.featureTable td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.featureTable td {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.featureTable thead th {
+  border-bottom: var(--border-width) solid var(--color-rule);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.featureTable .rowLabel,
+.featureTable thead th:first-child,
+.featureTable .groupRow {
+  padding-left: 0;
+  font-weight: var(--weight-regular);
+  text-align: left;
+}
+
+.featureTable .groupRow {
+  padding-top: var(--space-3);
+  border-bottom-color: var(--color-rule);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-kicker);
+  text-transform: uppercase;
+}

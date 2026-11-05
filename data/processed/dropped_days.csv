@@ -1,0 +1,16 @@
+date,n_bars,reason
+2015-11-11,0,no bars inside 09:15-15:30
+2016-10-30,0,no bars inside 09:15-15:30
+2017-10-19,0,no bars inside 09:15-15:30
+2018-11-07,0,no bars inside 09:15-15:30
+2019-10-27,0,no bars inside 09:15-15:30
+2020-11-14,0,no bars inside 09:15-15:30
+2021-02-24,11,fewer than 60 of 75 bars
+2021-11-04,0,no bars inside 09:15-15:30
+2022-10-24,0,no bars inside 09:15-15:30
+2023-11-12,0,no bars inside 09:15-15:30
+2024-03-02,21,fewer than 60 of 75 bars
+2024-05-18,21,fewer than 60 of 75 bars
+2024-11-01,0,no bars inside 09:15-15:30
+2025-10-21,12,fewer than 60 of 75 bars
+2026-05-15,50,fewer than 60 of 75 bars

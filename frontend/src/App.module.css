@@ -1,0 +1,58 @@
+.main {
+  position: relative;
+  isolation: isolate;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* The broadsheet's column rules: one hairline in the middle of each gap of the 12-column grid. */
+.columnRules {
+  display: none;
+}
+
+@media (min-width: 75rem) {
+  .columnRules {
+    position: absolute;
+    inset: 0 var(--gutter);
+    z-index: -1;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--grid-gap);
+    pointer-events: none;
+  }
+
+  .columnRules > span {
+    position: relative;
+  }
+
+  .columnRules > span::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    right: calc(var(--grid-gap) / -2);
+    width: var(--border-width);
+    background: var(--color-column-rule);
+  }
+}
+
+.fullState {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+}
+
+.skipLink {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-skip-link);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-rule);
+  background: var(--color-page);
+  transform: translateY(-200%);
+}
+
+.skipLink:focus {
+  transform: none;
+}

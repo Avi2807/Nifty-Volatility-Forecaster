@@ -1,0 +1,63 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-5);
+  margin-bottom: var(--space-2);
+  border-block: var(--border-width) solid var(--color-rule);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+}
+
+/* Toggles are set like a table's options: the underline shows which are on. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--hit-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  text-underline-offset: 0.3em;
+}
+
+.chip:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width);
+}
+
+.chip[aria-pressed="true"] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-heavy);
+}
+
+.chip:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.swatch {
+  width: var(--legend-key-size);
+  border-top-width: var(--legend-line-height);
+}
+
+.chip[aria-pressed="false"] .swatch {
+  opacity: var(--opacity-off);
+}
+
+.note {
+  max-width: var(--text-width);
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}

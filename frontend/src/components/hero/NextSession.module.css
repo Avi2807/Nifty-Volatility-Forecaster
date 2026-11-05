@@ -1,0 +1,57 @@
+.section {
+  padding-block: var(--space-5) var(--space-7);
+  border-bottom: var(--border-width) solid var(--color-rule);
+}
+
+.stale {
+  margin-bottom: var(--space-5);
+  padding: var(--space-2) var(--space-3);
+  background: var(--status-warning-surface);
+  color: var(--status-warning-text);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.figures {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.figures > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.figures dt {
+  color: var(--color-text-secondary);
+}
+
+.figures dd {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+}
+
+.caveats {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 70ch;
+  font-size: var(--text-sm);
+}
+
+.made {
+  color: var(--color-text-secondary);
+}
+
+.section code,
+.stale code {
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}

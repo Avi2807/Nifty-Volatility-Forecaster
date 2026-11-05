@@ -1,0 +1,769 @@
+{
+  "data_source": "real",
+  "architecture": {
+    "layers": [
+      "Dense(n_features -> 32)",
+      "Learned positional embedding (22 x 32)",
+      "Pre-norm Transformer encoder block (d=32, 2 heads, FFN 64, dropout 0.1)",
+      "Last-day pooling",
+      "Dense(32 -> 1)"
+    ],
+    "window_days": 22,
+    "d_model": 32,
+    "heads": 2,
+    "dropout": 0.1,
+    "features": {
+      "transformer": [
+        "log_rv",
+        "log_rv_w",
+        "log_rv_m",
+        "parkinson",
+        "ret",
+        "ret_neg",
+        "gap",
+        "log_vix",
+        "log_turnover_ratio",
+        "expiry_next",
+        "dow_mon",
+        "dow_tue",
+        "dow_wed",
+        "dow_thu",
+        "dow_fri",
+        "news_mean_sentiment",
+        "news_negative_share",
+        "news_log_count"
+      ],
+      "transformer_nosent": [
+        "log_rv",
+        "log_rv_w",
+        "log_rv_m",
+        "parkinson",
+        "ret",
+        "ret_neg",
+        "gap",
+        "log_vix",
+        "log_turnover_ratio",
+        "expiry_next",
+        "dow_mon",
+        "dow_tue",
+        "dow_wed",
+        "dow_thu",
+        "dow_fri"
+      ]
+    },
+    "departures_from_brief": [
+      "18 and 15 input features rather than 17 and 14, because the weekday one-hot has 5 columns.",
+      "Last-day pooling rather than mean pooling, chosen on validation data before the test set was opened.",
+      "Weekly expiry flag: Thursdays to 2025-08-28 and Tuesdays after, including pre-2019 Thursdays as a project choice."
+    ]
+  },
+  "feature_train_stats": {
+    "log_rv": {
+      "mean": -10.4064776942786,
+      "std": 0.6981097980027908
+    },
+    "log_rv_w": {
+      "mean": -10.403880997909164,
+      "std": 0.5654789384088712
+    },
+    "log_rv_m": {
+      "mean": -10.395754017789622,
+      "std": 0.4750374946682248
+    },
+    "parkinson": {
+      "mean": 4.816589491003258e-05,
+      "std": 7.705324215219177e-05
+    },
+    "ret": {
+      "mean": 0.0002915833202052574,
+      "std": 0.008558929199187867
+    },
+    "ret_neg": {
+      "mean": -0.003035981896164612,
+      "std": 0.005253867379797135
+    },
+    "gap": {
+      "mean": 0.0012687569627499462,
+      "std": 0.004740878756000316
+    },
+    "log_vix": {
+      "mean": 2.731337857712768,
+      "std": 0.18714660387683293
+    },
+    "log_turnover_ratio": {
+      "mean": -0.01988998832215414,
+      "std": 0.22511729645554415
+    },
+    "expiry_next": {
+      "mean": 0.21232306411323898,
+      "std": 0.40895229618967105
+    },
+    "dow_mon": {
+      "mean": 0.1990008326394671,
+      "std": 0.399248670941139
+    },
+    "dow_tue": {
+      "mean": 0.19983347210657784,
+      "std": 0.39987504989984984
+    },
+    "dow_wed": {
+      "mean": 0.20233139050791007,
+      "std": 0.4017379729662678
+    },
+    "dow_thu": {
+      "mean": 0.19983347210657784,
+      "std": 0.39987504989984984
+    },
+    "dow_fri": {
+      "mean": 0.19816819317235637,
+      "std": 0.39861956849502517
+    },
+    "news_mean_sentiment": {
+      "mean": 0.1155202419776196,
+      "std": 0.06113325123289714
+    },
+    "news_negative_share": {
+      "mean": 0.07150657453312234,
+      "std": 0.0561376763626529
+    },
+    "news_log_count": {
+      "mean": 3.547009615043473,
+      "std": 0.8440224788260143
+    }
+  },
+  "parameter_count": {
+    "transformer": 9761,
+    "transformer_nosent": 9665,
+    "garch": 3,
+    "mlp": 7937,
+    "lstm": 6561
+  },
+  "training": {
+    "seconds_all_models": 68.61840409995057,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "batch_size": 32,
+    "learning_rate": 0.0005,
+    "weight_decay": 0.001,
+    "warmup_epochs": 5,
+    "clip_norm": 1.0,
+    "patience": 15,
+    "max_epochs": 200,
+    "best_epochs": {
+      "transformer": [
+        24,
+        39,
+        12
+      ],
+      "transformer_nosent": [
+        29,
+        15,
+        13
+      ]
+    }
+  },
+  "gradcheck": {
+    "checks": 59,
+    "passed": 59,
+    "worst_relative_error": 2.4605648172596735e-09,
+    "tolerance": 1e-06,
+    "results": [
+      {
+        "case": "Dense",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          5
+        ],
+        "relative_error": 2.0092926093366407e-10,
+        "passed": true
+      },
+      {
+        "case": "Dense",
+        "array": "param[0]",
+        "shape": [
+          5,
+          3
+        ],
+        "relative_error": 6.953530557873155e-11,
+        "passed": true
+      },
+      {
+        "case": "Dense",
+        "array": "param[1]",
+        "shape": [
+          3
+        ],
+        "relative_error": 1.4746314527811883e-10,
+        "passed": true
+      },
+      {
+        "case": "Dense (no bias)",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          5
+        ],
+        "relative_error": 3.2196403510720005e-10,
+        "passed": true
+      },
+      {
+        "case": "Dense (no bias)",
+        "array": "param[0]",
+        "shape": [
+          5,
+          3
+        ],
+        "relative_error": 6.032066508171492e-11,
+        "passed": true
+      },
+      {
+        "case": "GELU",
+        "array": "input",
+        "shape": [
+          3,
+          4
+        ],
+        "relative_error": 2.3513899877445758e-11,
+        "passed": true
+      },
+      {
+        "case": "Dropout (training)",
+        "array": "input",
+        "shape": [
+          3,
+          4
+        ],
+        "relative_error": 1.610778640728795e-11,
+        "passed": true
+      },
+      {
+        "case": "LayerNorm",
+        "array": "input",
+        "shape": [
+          2,
+          3,
+          6
+        ],
+        "relative_error": 2.8923201128400724e-10,
+        "passed": true
+      },
+      {
+        "case": "LayerNorm",
+        "array": "param[0]",
+        "shape": [
+          6
+        ],
+        "relative_error": 1.4620070635676577e-10,
+        "passed": true
+      },
+      {
+        "case": "LayerNorm",
+        "array": "param[1]",
+        "shape": [
+          6
+        ],
+        "relative_error": 5.6980059427149614e-11,
+        "passed": true
+      },
+      {
+        "case": "Softmax",
+        "array": "input",
+        "shape": [
+          2,
+          3,
+          5
+        ],
+        "relative_error": 1.7378192655619002e-10,
+        "passed": true
+      },
+      {
+        "case": "ScaledDotProductAttention",
+        "array": "Q",
+        "shape": [
+          2,
+          4,
+          8
+        ],
+        "relative_error": 4.5328566075456495e-10,
+        "passed": true
+      },
+      {
+        "case": "ScaledDotProductAttention",
+        "array": "K",
+        "shape": [
+          2,
+          4,
+          8
+        ],
+        "relative_error": 6.562784076021579e-10,
+        "passed": true
+      },
+      {
+        "case": "ScaledDotProductAttention",
+        "array": "V",
+        "shape": [
+          2,
+          4,
+          8
+        ],
+        "relative_error": 1.4891712911427966e-10,
+        "passed": true
+      },
+      {
+        "case": "MultiHeadAttention",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          8
+        ],
+        "relative_error": 4.3446209647342554e-10,
+        "passed": true
+      },
+      {
+        "case": "MultiHeadAttention",
+        "array": "param[0]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 1.7751906894920545e-10,
+        "passed": true
+      },
+      {
+        "case": "MultiHeadAttention",
+        "array": "param[1]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 3.3030838279021373e-10,
+        "passed": true
+      },
+      {
+        "case": "MultiHeadAttention",
+        "array": "param[2]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 1.6700165301437157e-10,
+        "passed": true
+      },
+      {
+        "case": "MultiHeadAttention",
+        "array": "param[3]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 1.1052458246121896e-10,
+        "passed": true
+      },
+      {
+        "case": "PositionalEmbedding",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          4
+        ],
+        "relative_error": 2.3572054041178536e-10,
+        "passed": true
+      },
+      {
+        "case": "PositionalEmbedding",
+        "array": "param[0]",
+        "shape": [
+          6,
+          4
+        ],
+        "relative_error": 1.1225381685857552e-10,
+        "passed": true
+      },
+      {
+        "case": "MeanPool",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          3
+        ],
+        "relative_error": 6.687812798483997e-11,
+        "passed": true
+      },
+      {
+        "case": "LastDayPool",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          3
+        ],
+        "relative_error": 3.5822204038363413e-11,
+        "passed": true
+      },
+      {
+        "case": "MSELoss",
+        "array": "prediction",
+        "shape": [
+          6,
+          1
+        ],
+        "relative_error": 1.1407506327042668e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          8
+        ],
+        "relative_error": 4.364570187244045e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[0]",
+        "shape": [
+          8
+        ],
+        "relative_error": 3.710324084970922e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[1]",
+        "shape": [
+          8
+        ],
+        "relative_error": 4.0628318869122875e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[2]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 7.053104814549839e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[3]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 3.89972884053495e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[4]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 5.120231509817918e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[5]",
+        "shape": [
+          8,
+          8
+        ],
+        "relative_error": 4.0020511715028724e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[6]",
+        "shape": [
+          8
+        ],
+        "relative_error": 4.021498583546551e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[7]",
+        "shape": [
+          8
+        ],
+        "relative_error": 6.34119093767472e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[8]",
+        "shape": [
+          8,
+          16
+        ],
+        "relative_error": 2.3603190408315323e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[9]",
+        "shape": [
+          16
+        ],
+        "relative_error": 3.383205842187853e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[10]",
+        "shape": [
+          16,
+          8
+        ],
+        "relative_error": 1.0026940725218159e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=4, d=8)",
+        "array": "param[11]",
+        "shape": [
+          8
+        ],
+        "relative_error": 5.823085911037748e-11,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "input",
+        "shape": [
+          2,
+          22,
+          32
+        ],
+        "relative_error": 2.4605648172596735e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[0]",
+        "shape": [
+          32
+        ],
+        "relative_error": 7.642972575782217e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[1]",
+        "shape": [
+          32
+        ],
+        "relative_error": 4.87198330056141e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[2]",
+        "shape": [
+          32,
+          32
+        ],
+        "relative_error": 1.560851531087031e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[3]",
+        "shape": [
+          32,
+          32
+        ],
+        "relative_error": 1.4267671473356125e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[4]",
+        "shape": [
+          32,
+          32
+        ],
+        "relative_error": 1.0995801793047336e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[5]",
+        "shape": [
+          32,
+          32
+        ],
+        "relative_error": 1.0201255633443956e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[6]",
+        "shape": [
+          32
+        ],
+        "relative_error": 7.368739351870995e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[7]",
+        "shape": [
+          32
+        ],
+        "relative_error": 1.1237064067007862e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[8]",
+        "shape": [
+          32,
+          64
+        ],
+        "relative_error": 1.039797319935882e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[9]",
+        "shape": [
+          64
+        ],
+        "relative_error": 1.1628965585376853e-09,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[10]",
+        "shape": [
+          64,
+          32
+        ],
+        "relative_error": 5.609725333270065e-10,
+        "passed": true
+      },
+      {
+        "case": "EncoderBlock (T=22, d=32)",
+        "array": "param[11]",
+        "shape": [
+          32
+        ],
+        "relative_error": 2.0340296353065748e-10,
+        "passed": true
+      },
+      {
+        "case": "ReLU",
+        "array": "input",
+        "shape": [
+          3,
+          4
+        ],
+        "relative_error": 8.741578940927206e-11,
+        "passed": true
+      },
+      {
+        "case": "LSTMCell (2 in, 3 hidden)",
+        "array": "x",
+        "shape": [
+          2,
+          2
+        ],
+        "relative_error": 3.117307282929505e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTMCell (2 in, 3 hidden)",
+        "array": "h",
+        "shape": [
+          2,
+          3
+        ],
+        "relative_error": 1.0425979561831962e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTMCell (2 in, 3 hidden)",
+        "array": "c",
+        "shape": [
+          2,
+          3
+        ],
+        "relative_error": 1.1290424637716631e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTMCell (2 in, 3 hidden)",
+        "array": "param[0]",
+        "shape": [
+          5,
+          12
+        ],
+        "relative_error": 1.1833168073474913e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTMCell (2 in, 3 hidden)",
+        "array": "param[1]",
+        "shape": [
+          12
+        ],
+        "relative_error": 2.0145992067135643e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTM (2 in, 3 hid, T=4)",
+        "array": "input",
+        "shape": [
+          2,
+          4,
+          2
+        ],
+        "relative_error": 1.7295629071850255e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTM (2 in, 3 hid, T=4)",
+        "array": "param[0]",
+        "shape": [
+          5,
+          12
+        ],
+        "relative_error": 1.6522899963719987e-10,
+        "passed": true
+      },
+      {
+        "case": "LSTM (2 in, 3 hid, T=4)",
+        "array": "param[1]",
+        "shape": [
+          12
+        ],
+        "relative_error": 1.419518184287359e-10,
+        "passed": true
+      }
+    ]
+  },
+  "sentiment_classifier": {
+    "holdout_accuracy": 0.8054567022538552,
+    "holdout_macro_f1": 0.7481448693757623,
+    "vocabulary_size": 6149,
+    "note": "Measured on Financial PhraseBank. Accuracy on Indian news headlines was not measured."
+  }
+}
