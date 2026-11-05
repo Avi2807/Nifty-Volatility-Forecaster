@@ -10,7 +10,7 @@ export function ForecastCard({ row }: { row: ReplayRow }) {
     <div className={styles.lead}>
       <p className="kicker">From the replay{isLater && ", later check"}</p>
       <h2 id="hero-title" className={styles.label}>
-        What the {isLater ? "no-news model" : "model"} forecast for {formatLongDate(row.target_date)}
+        What the {isLater ? "no-news model" : "news model"} forecast for {formatLongDate(row.target_date)}
       </h2>
       <p className={styles.numberReplay}>
         ±{formatPct(logRvToDailyMovePct(row.forecast))}

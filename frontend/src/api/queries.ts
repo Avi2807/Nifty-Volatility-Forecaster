@@ -44,6 +44,23 @@ export function useLiveForecast() {
   });
 }
 
+/** Every forecast since the study, or null if the live code hasn't made a record yet. Scored each evening, like the live forecast. */
+export function useForwardRecord() {
+  return useQuery({
+    queryKey: ["forward"],
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    queryFn: async () => {
+      try {
+        return await (await getClient()).forward();
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return null;
+        throw error;
+      }
+    },
+  });
+}
+
 /** Keeps the previous day on screen while the next one loads, so stepping through days doesn't flash. */
 export function useDayDetails(date: string | undefined) {
   return useQuery({

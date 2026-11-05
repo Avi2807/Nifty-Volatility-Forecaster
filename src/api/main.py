@@ -3,9 +3,9 @@
 Run with: uvicorn src.api.main:app --port 8000
 
 Everything is loaded once at startup, so a missing or mismatched file stops the server with a
-clear message instead of failing on a later request. The one exception is /live, which reads its
-file per request so that a new forecast appears without a restart. In every row, `date` is the day t the
-forecast was made and `target_date` is the session it is for.
+clear message instead of failing on a later request. The exceptions are /live and /forward, which read
+their files per request so that a new forecast appears without a restart. In every row, `date` is the day t
+the forecast was made and `target_date` is the session it is for.
 """
 
 from __future__ import annotations
@@ -263,6 +263,17 @@ def live_forecast(request: Request) -> dict:
     if not path.exists():
         raise HTTPException(404, "No live forecast has been made yet. Run: python -m src.live")
     return _read_json(path)
+
+
+@router.get("/forward")
+def forward_record(request: Request) -> dict:
+    """Every forecast since the study, scored apart from it, with the simpler models' later-check scores."""
+    artifacts = request.app.state.paths.artifacts
+    path = artifacts / "forward_record.json"
+    if not path.exists():
+        raise HTTPException(404, "The forward record has no rows yet. Run: python -m src.live")
+    challengers = artifacts / "challengers.json"
+    return {**_read_json(path), "challengers": _read_json(challengers) if challengers.exists() else None}
 
 
 @router.get("/day/{day}")

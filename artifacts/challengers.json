@@ -1,0 +1,109 @@
+{
+  "data_source": "real",
+  "later_check": {
+    "n_days": 705,
+    "target_dates": [
+      "2023-07-04",
+      "2026-05-14"
+    ],
+    "models": {
+      "garch": {
+        "mse_log_rv": 0.7887455429326913,
+        "qlike": 0.33245973680658847,
+        "mean_error_log_rv": 0.5632958759326598,
+        "var99": {
+          "breaches": 10,
+          "expected_breaches": 7.05,
+          "breach_rate": 0.014184397163120567,
+          "kupiec_lr": 1.103635785771985,
+          "kupiec_rejected": false
+        }
+      },
+      "mlp_nosent": {
+        "mse_log_rv": 0.36627595332920526,
+        "qlike": 0.26834721628442554,
+        "mean_error_log_rv": -0.04486723938312677,
+        "var99": {
+          "breaches": 28,
+          "expected_breaches": 7.05,
+          "breach_rate": 0.03971631205673759,
+          "kupiec_lr": 35.969139288706884,
+          "kupiec_rejected": true
+        }
+      },
+      "lstm_nosent": {
+        "mse_log_rv": 0.34671052031579347,
+        "qlike": 0.2364776874401307,
+        "mean_error_log_rv": 0.007815773956929997,
+        "var99": {
+          "breaches": 25,
+          "expected_breaches": 7.05,
+          "breach_rate": 0.03546099290780142,
+          "kupiec_lr": 27.858060849684932,
+          "kupiec_rejected": true
+        }
+      }
+    },
+    "diebold_mariano": [
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "garch",
+        "loss": "squared_error_log_rv",
+        "mean_loss_difference": -0.4327986003394349,
+        "statistic": -7.707202644707878,
+        "p_value": 1.2860550589502313e-14
+      },
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "garch",
+        "loss": "qlike",
+        "mean_loss_difference": -0.07051841623543478,
+        "statistic": -3.0680976796472286,
+        "p_value": 0.002154261886643288
+      },
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "mlp_nosent",
+        "loss": "squared_error_log_rv",
+        "mean_loss_difference": -0.010329010735948906,
+        "statistic": -1.1611763157764525,
+        "p_value": 0.24557020434833893
+      },
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "mlp_nosent",
+        "loss": "qlike",
+        "mean_loss_difference": -0.0064058957132719155,
+        "statistic": -1.081846389198107,
+        "p_value": 0.2793207898539895
+      },
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "lstm_nosent",
+        "loss": "squared_error_log_rv",
+        "mean_loss_difference": 0.009236422277462927,
+        "statistic": 1.1103249922567198,
+        "p_value": 0.2668590072763962
+      },
+      {
+        "model_a": "transformer_nosent",
+        "model_b": "lstm_nosent",
+        "loss": "qlike",
+        "mean_loss_difference": 0.025463633131022904,
+        "statistic": 3.0671200950545243,
+        "p_value": 0.0021613200273959137
+      }
+    ],
+    "bonferroni_limit": 0.008333333333333333
+  },
+  "calibrated_var": {
+    "model": "transformer_nosent",
+    "multiplier": 3.380318985083333,
+    "rule_multiplier": 2.33,
+    "n_days": 705,
+    "fitted_on": [
+      "2023-07-04",
+      "2026-05-14"
+    ]
+  }
+}

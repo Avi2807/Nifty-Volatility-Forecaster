@@ -1,6 +1,6 @@
 # Nifty Volatility Forecaster: frontend
 
-A single-page replay of the model's next-day volatility forecasts. The test data ends in June 2023, so nothing here is live: you pick a test date and see what the frozen model forecast for the next session and what actually happened.
+The page leads with a real next-session forecast and how the live code has done since the study. Below that is a replay of the frozen models' next-day forecasts: you pick a date and see what was forecast for the next session and what actually happened. Forecasts up to June 2023 come from the news model, and later ones from the no-news model, because the news archive ends there.
 
 Built with React 18, Vite, TypeScript, TanStack Query, lightweight-charts, d3 and CSS modules.
 
@@ -56,9 +56,10 @@ This sets `VITE_USE_MOCKS=true` from `.env.mock`. A banner on every view says th
 | Section | Component folder | What it shows |
 |---|---|---|
 | Next session | `components/hero/NextSession.tsx` | The live forecast from `/api/live`, with its error range, other views and caveats. It's marked out of date once its session closes. |
+| Forward record | `components/forward` | `/api/forward`: every forecast since the study, live and backfilled kept apart, the VaR lines being tried, and the simpler models on the later check |
 | Replay | `components/hero` | The forecast, what happened and India VIX's view for the selected date, with the date scrubber. Runs through the test period and the later check |
 | Forecast vs actual | `components/forecast` | Annualised volatility for each model, with toggles and range presets. GARCH, the MLP and the LSTM start off, and are unavailable on the later check |
-| Risk desk | `components/risk` | Daily returns against the 99% VaR line, breaches and the Kupiec result |
+| Risk desk | `components/risk` | Daily returns against the 99% VaR line, and the breach count. The Kupiec test is deliberately left off the page, though `/api/var` still returns it |
 | Why this forecast | `components/why` | Attention strip and heatmap, headlines, and inputs vs their train-period average |
 | Scoreboard | `components/scoreboard` | Test scores for all 8 models, Diebold-Mariano p-values, the model ladder, the Transformer's tests against every other model, the news ablation and the later check |
 | Under the hood | `components/hood` | Architecture diagram, parameter count, training time, gradient checks and classifier accuracy |

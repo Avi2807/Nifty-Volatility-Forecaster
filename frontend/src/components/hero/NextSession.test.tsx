@@ -16,6 +16,8 @@ const forecast: LiveForecast = {
   first_session: "2026-08-07",
   sessions_used: 60,
   var99: 0.01398,
+  challengers: { garch: Math.log(0.008 ** 2), mlp_nosent: Math.log(0.0055 ** 2), lstm_nosent: Math.log(0.0062 ** 2) },
+  var99_candidates: { calibrated: 0.021, garch: 0.019 },
   nifty_close: 23810.85,
   india_vix: 15.72,
   turnover_crore: 40323.17,
@@ -57,7 +59,15 @@ describe("NextSessionForecast", () => {
     const text = container.textContent ?? "";
     expect(text).toContain("on 24 of 705 days, against about 7 expected");
     expect(text).toContain("Yahoo's unofficial 5-minute feed");
-    expect(text).toContain("in none of the scores");
+    expect(text).toContain("in none of the study's scores");
+  });
+
+  it("sets the simpler models and the untested VaR candidates beside the forecast", () => {
+    const { container } = render(<NextSessionForecast forecast={forecast} now={beforeTheSession} />);
+    const text = container.textContent ?? "";
+    expect(text).toContain("LSTM, no news±0.62%");
+    expect(text).toContain("GARCH(1,1)±0.80%");
+    expect(text).toContain("haven't been judged yet: a calibrated line at 2.10% and GARCH's at 1.90%");
   });
 
   it("isn't marked out of date until the session has closed", () => {

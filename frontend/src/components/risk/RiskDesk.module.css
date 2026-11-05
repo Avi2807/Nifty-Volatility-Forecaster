@@ -105,26 +105,6 @@
   line-height: var(--leading-tight);
 }
 
-.fail,
-.pass {
-  margin-top: var(--space-1);
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-}
-
-.fail {
-  color: var(--status-critical-text);
-}
-
-.pass {
-  color: var(--status-good);
-}
-
-.lr {
-  font-family: var(--font-mono);
-}
-
 .why {
   padding-top: var(--space-3);
   border-top: var(--border-width) solid var(--color-border);

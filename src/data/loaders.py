@@ -206,6 +206,11 @@ def load_index_closes(raw_dir: Path) -> DatedSeries | None:
     return _load_daily_series(raw_dir, "index_close", "close") if find_source(raw_dir, "index_close") else None
 
 
+def load_index_opens(raw_dir: Path) -> DatedSeries | None:
+    """NSE's published daily opens, from the same optional files."""
+    return _load_daily_series(raw_dir, "index_close", "open") if find_source(raw_dir, "index_close") else None
+
+
 @dataclass(frozen=True)
 class Headlines:
     dates: np.ndarray  # datetime64[D]

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import datetime, time
 
 import numpy as np
 import pytest
@@ -16,6 +16,8 @@ from src.data.bars import daily_from_minute
 from src.data.expiry import weekly_expiry_dates
 from src.data.features import build_feature_table
 from src.data.loaders import DatedSeries, MinuteData, load_expiry_dates, load_minute, load_turnover, load_vix, read_table
+from src.eval.challengers import CHALLENGERS, run_challengers
+from src.forward import RECORD_FILE
 from src.live import (
     IST,
     LiveDataError,
@@ -26,6 +28,7 @@ from src.live import (
     parse_holidays,
     upcoming_sessions,
 )
+from src.models.garch import run_garch
 from tests.test_api import paths as served_paths  # noqa: F401  (a fixture: a fake run the API can serve)
 from tests.test_eval import run  # noqa: F401  (a fixture: the whole evaluation on fake data)
 
@@ -183,6 +186,9 @@ def test_a_changed_checkpoint_stops_the_forecast(run, tmp_path):  # noqa: F811
 def fetched(monkeypatch, tmp_path, run):  # noqa: F811
     """A whole run with no network: simulated bars, the closing file and the holiday list."""
     paths, _ = run
+    if not (paths.artifacts / "challengers.json").exists():
+        run_garch(paths)
+        run_challengers(paths)
     minute, vix, turnover = fake_market()
     last = daily_from_minute(minute)[0]
     day = last.dates[-1]
@@ -209,6 +215,7 @@ def fetched(monkeypatch, tmp_path, run):  # noqa: F811
     output = paths.artifacts / "live_forecast.json"
     yield paths, responses, file_url, dated, day, output
     output.unlink(missing_ok=True)
+    (paths.artifacts / RECORD_FILE).unlink(missing_ok=True)
 
 
 AFTER_THE_CLOSE = datetime(2026, 11, 3, 19, 0, tzinfo=IST)
@@ -227,6 +234,60 @@ def test_a_run_writes_a_forecast_for_the_next_session(fetched):
     assert saved["turnover_crore"] == 40323.17
     assert saved["features"]["log_vix"] == pytest.approx(np.log(15.72))
     assert saved["track_record"]["error_band_low"] < 0 < saved["track_record"]["error_band_high"]
+
+
+def test_a_run_gives_the_simpler_models_and_var_candidates_their_own_figures(fetched):
+    paths, *_ = fetched
+    saved = live.main(paths, AFTER_THE_CLOSE)
+    assert set(saved["challengers"]) == set(CHALLENGERS)
+    assert saved["var99_candidates"]["garch"] == pytest.approx(2.33 * np.sqrt(np.exp(saved["challengers"]["garch"])))
+    multiplier = json.loads((paths.artifacts / "challengers.json").read_text(encoding="utf-8"))["calibrated_var"]["multiplier"]
+    assert saved["var99_candidates"]["calibrated"] == pytest.approx(multiplier * np.sqrt(np.exp(saved["forecast"])))
+
+
+def test_a_run_adds_its_forecast_to_the_record_and_backfills_what_it_can(fetched):
+    paths, _, _, _, day, _ = fetched
+    saved = live.main(paths, datetime.combine(day.item(), time(19, 0), IST))  # that session's own evening
+    record = json.loads((paths.artifacts / RECORD_FILE).read_text(encoding="utf-8"))
+    newest = record["rows"][-1]
+    assert newest["date"] == str(day)
+    assert newest["kind"] == "live"
+    assert newest["forecasts"]["transformer_nosent"] == pytest.approx(saved["forecast"])
+    assert newest["forecasts"]["har"] == pytest.approx(saved["references"]["har"])
+    assert newest["var99"]["rule"] == pytest.approx(saved["var99"])
+    assert newest["actual_log_rv"] is None
+    assert len(record["rows"]) > 1
+    assert all(row["kind"] == "backfilled" and row["actual_log_rv"] is not None for row in record["rows"][:-1])
+    assert record["scores"]["backfilled"]["n_days"] == len(record["rows"]) - 1
+
+
+def test_the_forecast_a_run_replaces_stays_on_the_record(fetched):
+    paths, _, _, _, day, output = fetched
+    earlier = (day - 1).item().isoformat()
+    output.write_text(json.dumps({
+        "date": earlier, "target_date": str(day), "made_at": f"{earlier}T19:00:00+05:30", "forecast": -1.5, "var99": 0.5,
+        "references": {"har": -2.0, "naive": -3.0, "vix_implied": -4.0},
+    }), encoding="utf-8")
+    live.main(paths, AFTER_THE_CLOSE)
+    record = json.loads((paths.artifacts / RECORD_FILE).read_text(encoding="utf-8"))
+    kept = next(row for row in record["rows"] if row["date"] == earlier)
+    assert kept["kind"] == "live"
+    assert kept["forecasts"]["transformer_nosent"] == -1.5
+    assert kept["forecasts"]["garch"] is None
+    assert kept["actual_log_rv"] is not None
+    assert record["scores"]["live"]["n_days"] == 1
+
+
+def test_a_run_refuses_without_the_challengers(fetched):
+    paths, *_ = fetched
+    saved = paths.artifacts / "challengers.json"
+    original = saved.read_bytes()
+    saved.unlink()
+    try:
+        with pytest.raises(LiveDataError, match="src.eval.challengers"):
+            live.main(paths, AFTER_THE_CLOSE)
+    finally:
+        saved.write_bytes(original)
 
 
 def test_a_run_touches_no_scored_artifact(fetched):

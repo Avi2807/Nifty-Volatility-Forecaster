@@ -25,7 +25,6 @@ export function ModelScoreTable({ period, metrics }: { period: PeriodScores; met
           <th scope="col">p vs HAR, MSE</th>
           <th scope="col">p vs HAR, QLIKE</th>
           <th scope="col">VaR breaches</th>
-          <th scope="col">Kupiec (limit {metrics.kupiec_critical_value})</th>
         </tr>
       </thead>
       <tbody>
@@ -38,9 +37,6 @@ export function ModelScoreTable({ period, metrics }: { period: PeriodScores; met
             <td>{harPValue(name, "qlike", tests)}</td>
             <td>
               {score.var99.breaches} of about {score.var99.expected_breaches.toFixed(1)}
-            </td>
-            <td>
-              {score.var99.kupiec_lr.toFixed(2)}, {score.var99.kupiec_rejected ? "fails" : "passes"}
             </td>
           </tr>
         ))}

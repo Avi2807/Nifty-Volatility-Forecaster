@@ -5,6 +5,7 @@ import { EmptyState } from "./components/feedback/EmptyState";
 import { ErrorState } from "./components/feedback/ErrorState";
 import { Skeleton } from "./components/feedback/Skeleton";
 import { ForecastVsActual } from "./components/forecast/ForecastVsActual";
+import { ForwardRecordSection } from "./components/forward/ForwardRecord";
 import { Hero } from "./components/hero/Hero";
 import { NextSession } from "./components/hero/NextSession";
 import { UnderTheHood } from "./components/hood/UnderTheHood";
@@ -42,7 +43,7 @@ export function App() {
         Skip to content
       </a>
       <DataSourceBanner source={summary.data?.data_source} />
-      <TopBar selectedRow={selected} />
+      <TopBar selectedRow={selected} live={live.data} />
       <main id="main" className={styles.main}>
         <div className={styles.columnRules} aria-hidden="true">
           {COLUMN_GAPS.map((gap) => (
@@ -78,6 +79,7 @@ export function App() {
         )}
         {ready && (
           <>
+            <ForwardRecordSection later={summary.data.metrics.later_check} />
             <Hero rows={rows} index={index} adjustedFrom={adjustedFrom} onSelect={select} />
             <ForecastVsActual rows={rows} selectedDate={date} onSelect={select} />
             <RiskDesk rows={rows} selectedDate={date} onSelect={select} />

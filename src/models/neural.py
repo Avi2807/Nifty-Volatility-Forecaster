@@ -28,11 +28,11 @@ def _checkpoint(paths: RunPaths, name: str, seed: int):
     return model_folder(paths) / f"{name}_seed{seed}.npz"
 
 
-def train_neural(paths: RunPaths, name: str, build: Build, prepare: Prepare, recipe: Recipe) -> dict:
+def train_neural(paths: RunPaths, name: str, build: Build, prepare: Prepare, recipe: Recipe, with_sentiment: bool = True) -> dict:
     """Every seed on train, stopping on validation. Saves checkpoints, logs and prints the timing."""
     print(f"\n=== {name.upper()} ({paths.data_source} data) ===")
     started = time.perf_counter()
-    data = load_dataset(paths, with_sentiment=True)
+    data = load_dataset(paths, with_sentiment)
     train, val = prepare(data.splits["train"]), prepare(data.splits["val"])
     n_features = len(data.feature_names)
     n_parameters = build(n_features, SEEDS[0]).n_parameters()

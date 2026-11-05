@@ -1,4 +1,6 @@
+import type { LiveForecast } from "../../api/types";
 import { formatDate, formatLongDate } from "../../lib/format";
+import { sessionHasClosed } from "../../lib/live";
 import type { ReplayRow } from "../../lib/replay";
 import { ThemeToggle } from "./ThemeToggle";
 import { Ticker } from "./Ticker";
@@ -6,6 +8,7 @@ import styles from "./TopBar.module.css";
 
 const LINKS = [
   { href: "#next-session", label: "Next session" },
+  { href: "#forward-record", label: "Forward record" },
   { href: "#replay", label: "Replay" },
   { href: "#forecast-vs-actual", label: "Forecast vs actual" },
   { href: "#risk-desk", label: "Risk desk" },
@@ -15,14 +18,23 @@ const LINKS = [
 ];
 
 /** The masthead and ticker scroll away with the page. The section links below them stay stuck to the top. */
-export function TopBar({ selectedRow }: { selectedRow?: ReplayRow }) {
+export function TopBar({ selectedRow, live }: { selectedRow?: ReplayRow; live?: LiveForecast | null }) {
   return (
     <>
       <header className={styles.masthead}>
         <div className={styles.dateline}>
           <p className={styles.edition}>
-            <span className="kicker">Replay edition</span>
-            {selectedRow && <span className={styles.editionDate}>{formatLongDate(selectedRow.date)}</span>}
+            {live ? (
+              <>
+                <span className="kicker">{sessionHasClosed(live.target_date, new Date()) ? "Last live forecast" : "Live forecast"}</span>
+                <span className={styles.editionDate}>{formatLongDate(live.target_date)}</span>
+              </>
+            ) : (
+              <>
+                <span className="kicker">Replay edition</span>
+                {selectedRow && <span className={styles.editionDate}>{formatLongDate(selectedRow.date)}</span>}
+              </>
+            )}
           </p>
           <ThemeToggle />
         </div>
@@ -30,7 +42,7 @@ export function TopBar({ selectedRow }: { selectedRow?: ReplayRow }) {
           Nifty Volatility Forecaster
         </a>
       </header>
-      <Ticker row={selectedRow} />
+      <Ticker row={selectedRow} live={live} />
       <nav aria-label="Sections" className={styles.bar}>
         <div className={styles.inner}>
           <ul className={styles.links}>
@@ -44,8 +56,7 @@ export function TopBar({ selectedRow }: { selectedRow?: ReplayRow }) {
           </ul>
           {selectedRow && (
             <p className={styles.date}>
-              <span className="visually-hidden">Selected date: </span>
-              {formatDate(selectedRow.date)}
+              Replay: {formatDate(selectedRow.date)}
             </p>
           )}
         </div>

@@ -178,6 +178,15 @@ describe("ModelScoreTable with the comparison", () => {
     expect(within(screen.getByRole("row", { name: /^LSTM/ })).getAllByText("not tested")).toHaveLength(2);
   });
 
+  it("shows breach counts but no Kupiec result", () => {
+    const { container } = render(<ModelScoreTable period={period} metrics={{ kupiec_critical_value: 3.84 } as Metrics} />);
+    const text = (container.textContent ?? "").toLowerCase();
+    expect(text).toContain("var breaches");
+    expect(text).not.toContain("kupiec");
+    expect(text).not.toContain("fails");
+    expect(text).not.toContain("passes");
+  });
+
   it("lists all eight models", () => {
     render(<ModelScoreTable period={period} metrics={{ kupiec_critical_value: 3.84 } as Metrics} />);
     expect(screen.getAllByRole("row")).toHaveLength(9);

@@ -5,6 +5,9 @@ import type {
   DayDetails,
   ForecastRow,
   ForecastsResponse,
+  ForwardRecord,
+  ForwardRow,
+  ForwardScores,
   LaterModelName,
   LaterRow,
   LiveForecast,
@@ -170,6 +173,8 @@ function liveForecast(): LiveForecast {
     first_session: last.date,
     sessions_used: 60,
     var99: last.var99_transformer_nosent,
+    challengers: { garch: last.har + 0.3, mlp_nosent: last.har, lstm_nosent: last.har },
+    var99_candidates: { calibrated: last.var99_transformer_nosent * 1.4, garch: last.var99_transformer_nosent * 1.3 },
     nifty_close: last.nifty_close ?? 20000,
     india_vix: 15,
     turnover_crore: 30000,
@@ -188,6 +193,71 @@ function liveForecast(): LiveForecast {
   };
 }
 
+/** Simulated too: the last few later-check rows, with the live forecast as the one still pending. */
+function forwardRecord(): ForwardRecord {
+  const scored = laterRows.slice(-5).map(
+    (row): ForwardRow => ({
+      date: row.date,
+      target_date: row.target_date,
+      made_at: `${row.date}T19:00:00+05:30`,
+      kind: "backfilled",
+      forecasts: {
+        transformer_nosent: row.transformer_nosent,
+        har: row.har,
+        naive: row.naive,
+        vix_implied: row.vix_implied,
+        garch: row.har + 0.3,
+        mlp_nosent: row.har,
+        lstm_nosent: row.har,
+      },
+      var99: { rule: row.var99_transformer_nosent, calibrated: row.var99_transformer_nosent * 1.4, garch: row.var99_transformer_nosent * 1.3 },
+      actual_log_rv: row.actual_log_rv,
+      return_oc: row.return_oc,
+    }),
+  );
+  const live = liveForecast();
+  const pending: ForwardRow = {
+    date: live.date,
+    target_date: live.target_date,
+    made_at: live.made_at,
+    kind: "live",
+    forecasts: { transformer_nosent: live.forecast, ...live.references, ...live.challengers },
+    var99: { rule: live.var99, ...live.var99_candidates },
+    actual_log_rv: null,
+    return_oc: null,
+  };
+  const scores = (n: number): ForwardScores => {
+    const model = { n_days: n, mse_log_rv: n ? 0.25 : null, qlike: n ? 0.15 : null };
+    const line = { n_days: n, breaches: 0, expected_breaches: n * 0.01 };
+    return {
+      n_days: n,
+      models: { transformer_nosent: model, har: model, naive: model, vix_implied: model, garch: model, mlp_nosent: model, lstm_nosent: model },
+      var99: { rule: line, calibrated: line, garch: line },
+    };
+  };
+  const record = summary.metrics.later_check!;
+  const challenger = record.models.har!;
+  return {
+    data_source: "mock",
+    updated_at: live.made_at,
+    calibrated_multiplier: 3.3,
+    rule_multiplier: 2.33,
+    rows: [...scored, pending],
+    scores: { live: scores(0), backfilled: scores(scored.length) },
+    challengers: {
+      data_source: "mock",
+      later_check: {
+        n_days: record.n_days,
+        target_dates: record.target_dates,
+        models: { garch: challenger, mlp_nosent: challenger, lstm_nosent: challenger },
+        diebold_mariano: [],
+        bonferroni_limit: 0.05 / 6,
+      },
+      calibrated_var: { model: "transformer_nosent", multiplier: 3.3, rule_multiplier: 2.33, n_days: record.n_days, fitted_on: record.target_dates },
+    },
+  };
+}
+
 /** Same shapes as the backend, including its refusal of non-test dates. Everything is labelled "mock". */
 export const mockClient: ApiClient = {
   summary: () => later(summary),
@@ -197,6 +267,7 @@ export const mockClient: ApiClient = {
   },
   later: () => later({ data_source: "mock", models: LATER_MODELS, count: laterRows.length, summary: summary.metrics.later_check!, rows: laterRows }),
   live: () => later(liveForecast()),
+  forward: () => later(forwardRecord()),
   day: async (date: string) => later(buildDay(date)),
   valueAtRisk: async (model: ModelName) => later(varResponse(model)),
   sentiment: (range: DateRange = {}): Promise<SentimentResponse> => {

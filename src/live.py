@@ -6,9 +6,10 @@ Run it each evening, once NSE has published that day's closing file. Nothing is 
 checkpoints are verified against their recorded checksums, then used as they are. The news model
 can't do this, because its archive ends in June 2023.
 
-The result goes to artifacts/live_forecast.json and is kept out of every score, because it has no
-outcome yet. Downloads are kept in data/live/, which the main pipeline never reads, so fetched
-data can't reach the study tables.
+The result goes to artifacts/live_forecast.json. Each run also adds to artifacts/forward_record.json
+and scores the rows whose outcome is now known, apart from the study's scores (see src/forward.py).
+Downloads are kept in data/live/, which the main pipeline never reads, so fetched data can't reach
+the study tables.
 
 Sources
 - 5-minute Nifty bars: Yahoo's unofficial chart endpoint, the last 60 days or so.
@@ -21,7 +22,6 @@ from __future__ import annotations
 import csv
 import io
 import json
-import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -35,12 +35,12 @@ from src.data.bars import daily_from_minute
 from src.data.expiry import weekly_expiry_dates
 from src.data.features import build_feature_table, weekday_index
 from src.data.loaders import DatedSeries, MinuteData, clean_series, load_turnover, load_vix, read_table
-from src.data.splits import Scaler
+from src.eval.challengers import CHALLENGERS
 from src.eval.evaluate import verify_frozen
 from src.eval.metrics import var99
-from src.eval.references import har_fit, har_forecast, vix_implied_forecast
+from src.eval.references import har_forecast, vix_implied_forecast
+from src.forward import har_coefficients, session_rows, transformer_seed_forecasts, update_record, write_json
 from src.models.transformer import WINDOW_DAYS
-from src.models.train import SEEDS, load_checkpoint, predict
 
 IST = timezone(timedelta(hours=5, minutes=30))
 IST_OFFSET_SECONDS = 19800
@@ -173,21 +173,10 @@ def build_forecast(
     columns = [table.columns.index(name) for name in MARKET_FEATURES]
     window = table.X[-WINDOW_DAYS:][:, columns]
 
-    seed_forecasts = []
-    for seed in SEEDS:
-        model, meta = load_checkpoint(paths.artifacts / "models" / f"transformer_nosent_seed{seed}.npz")
-        if meta["feature_names"] != MARKET_FEATURES:
-            raise RuntimeError(f"Checkpoint seed {seed} was trained on different features")
-        scaled = Scaler(meta["scaler_mean"], meta["scaler_std"]).transform(window)
-        standardised, _ = predict(model, scaled[None])
-        seed_forecasts.append(float(standardised[0, 0]) * meta["target_std"] + meta["target_mean"])
+    seed_forecasts = transformer_seed_forecasts(paths, window[None])[:, 0].tolist()
 
     latest = dict(zip(MARKET_FEATURES, (float(value) for value in window[-1])))
-    study = read_table(paths.processed / "daily_features.csv")
-    har_inputs = np.column_stack([study[name].astype(np.float64) for name in ("log_rv", "log_rv_w", "log_rv_m")])
-    is_train = study["split"].astype(str) == "train"
-    coefficients = har_fit(har_inputs[is_train], study["target_log_rv"].astype(np.float64)[is_train])
-    har = har_forecast(np.array([[latest["log_rv"], latest["log_rv_w"], latest["log_rv_m"]]]), coefficients)
+    har = har_forecast(np.array([[latest["log_rv"], latest["log_rv_w"], latest["log_rv_m"]]]), har_coefficients(paths))
     return {
         "date": str(daily.dates[-1]),
         "target_date": str(next_session),
@@ -224,11 +213,11 @@ def track_record(paths: RunPaths) -> dict:
     }
 
 
-def write_json(path: Path, content: dict) -> None:
-    """Write through a temporary file, so the API can never read a half-written forecast."""
-    temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(content, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
+def _calibrated_multiplier(paths: RunPaths) -> float:
+    path = paths.artifacts / "challengers.json"
+    if not path.exists():
+        raise LiveDataError("The challenger models haven't been trained. Run: python -m src.eval.challengers")
+    return json.loads(path.read_text(encoding="utf-8"))["calibrated_var"]["multiplier"]
 
 
 def main(paths: RunPaths = REAL_PATHS, now: datetime | None = None) -> dict:
@@ -271,12 +260,25 @@ def main(paths: RunPaths = REAL_PATHS, now: datetime | None = None) -> dict:
         )
 
     forecast = build_forecast(paths, minute, vix, turnover, expiry_dates, future[0])
+
+    # Every session the bars can support goes on the record, which is how a missed evening gets backfilled.
+    table = build_feature_table(daily, vix, turnover, expiry_dates, None, daily.dates[0], daily.dates[-1], future[0])
+    multiplier = _calibrated_multiplier(paths)
+    rows = session_rows(paths, table, daily, future[0], multiplier, now)
+    newest = rows[-1]
+
+    live_path = paths.artifacts / "live_forecast.json"
+    previous = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else None
+    update_record(paths, rows, daily, previous, multiplier, now)
+
     result = {
         "data_source": paths.data_source,
         "made_at": now.isoformat(timespec="seconds"),
         "model": "transformer_nosent",
         **forecast,
         "var99": float(var99(np.array([forecast["forecast"]]))[0]),
+        "challengers": {name: newest["forecasts"][name] for name in CHALLENGERS},
+        "var99_candidates": {"calibrated": newest["var99"]["calibrated"], "garch": newest["var99"]["garch"]},
         "nifty_close": official.nifty_close,
         "india_vix": official.india_vix,
         "turnover_crore": official.turnover_crore,
@@ -287,7 +289,7 @@ def main(paths: RunPaths = REAL_PATHS, now: datetime | None = None) -> dict:
             "holidays": HOLIDAYS_URL,
         },
     }
-    write_json(paths.artifacts / "live_forecast.json", result)
+    write_json(live_path, result)
     move = np.sqrt(np.exp(result["forecast"])) * 100
     print(f"Forecast for {result['target_date']}, made after the close on {result['date']}: +/-{move:.2f}% (session only)")
     print(f"Wrote {paths.artifacts / 'live_forecast.json'}")

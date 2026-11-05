@@ -82,6 +82,7 @@ labelled as synthetic. CORS allows the frontend at `localhost:5173`. Interactive
 | `GET /api/var?model=` | Test-period VaR series, breach dates and Kupiec result. `model` defaults to `transformer` |
 | `GET /api/sentiment?start=&end=` | Daily news sentiment, ending on 2023-06-30 |
 | `GET /api/live` | The latest next-session forecast from `python -m src.live`, or 404 if none has been made. It's read per request, so a new one appears without a restart. |
+| `GET /api/forward` | The forward record and its running scores, plus the simpler models' later-check scores, or 404 if `python -m src.live` hasn't made a record yet. Also read per request. |
 | `GET /api/later?start=&end=&models=` | The later check's rows and scores. Rows add the no-news model's `var99_transformer_nosent` and `breach_transformer_nosent`, and `nifty_close`. The with-news model isn't in them |
 
 Bad dates, unknown models and a start after the end return 422 with a message. The later check is
@@ -93,6 +94,24 @@ in `/api/summary` under `metrics.later_check`.
 `frontend/` is a React app that replays the test period from this API. With the API running,
 `cd frontend`, `npm install`, then `npm run dev` and open http://localhost:5173. See
 `frontend/README.md`.
+
+## The forward record
+
+`python -m src.live` adds each forecast to `artifacts/forward_record.json` and scores the earlier ones whose
+session has now happened. These scores are kept apart from the study's.
+
+- A row is **live** only if it was saved before its session opened. Anything later is **backfilled**: it uses
+  only the data up to the evening before, but its outcome could already have been known, so it isn't live
+  evidence. That's also how a missed evening gets filled in, as far back as Yahoo's bars allow.
+- The first forecast saved for a date is never rewritten. A model added after a row was saved stays null on it.
+- Bars stop at 15 May 2026 in the minute file and reach back only about 60 days at Yahoo, so there are no
+  forecasts from mid-May until October 2026. GARCH needs unbroken returns, so NSE's daily open and close
+  figures fill that gap for it alone.
+
+`python -m src.eval.challengers` trains no-news versions of the MLP and LSTM with their existing recipes and no
+tuning, then scores them and GARCH on the later check. They run beside the live model and never replace it.
+It also sets the calibrated VaR multiplier from the later check, so it counts as post-test and only later days
+can judge it. The rule's own line and warning stay as they were.
 
 ## Results
 

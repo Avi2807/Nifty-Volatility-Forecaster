@@ -14,6 +14,7 @@ from src.config import REAL_PATHS, SYNTHETIC_PATHS, RunPaths
 from src.data.features import build_and_write, build_daily_tables
 from src.data.loaders import DataFileError, assert_no_synthetic_files, missing_required
 from src.data.synthetic import generate_synthetic_raw
+from src.eval.challengers import run_challengers
 from src.eval.compare import run_comparison
 from src.eval.evaluate import run_evaluation
 from src.eval.export import run_export
@@ -63,6 +64,7 @@ def main() -> int:
         run_mlp(paths)
         run_lstm(paths)
         run_comparison(paths)  # the only place their test forecasts are made, after their freeze
+        run_challengers(paths)  # no-news versions, scored on the later check and never on the test period
     except DataFileError as error:
         print(f"\nDATA ERROR: {error}", file=sys.stderr)
         return 1

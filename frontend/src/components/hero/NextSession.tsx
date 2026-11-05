@@ -14,7 +14,7 @@ const REFRESH_COMMAND = "python -m src.live";
 
 const move = (logRv: number) => formatPct(logRvToDailyMovePct(logRv));
 
-/** The live forecast, as it stands at `now`. It has no outcome yet, so nothing here is a score. */
+/** The live forecast, as it stands at `now`. Nothing here is a score: those are in the forward record. */
 export function NextSessionForecast({ forecast, now }: { forecast: LiveForecast; now: Date }) {
   const closed = sessionHasClosed(forecast.target_date, now);
   const record = forecast.track_record;
@@ -64,6 +64,18 @@ export function NextSessionForecast({ forecast, now }: { forecast: LiveForecast;
                 <dd>±{move(forecast.references.har)}</dd>
               </div>
               <div>
+                <dt>GARCH(1,1)</dt>
+                <dd>±{move(forecast.challengers.garch)}</dd>
+              </div>
+              <div>
+                <dt>MLP, no news</dt>
+                <dd>±{move(forecast.challengers.mlp_nosent)}</dd>
+              </div>
+              <div>
+                <dt>LSTM, no news</dt>
+                <dd>±{move(forecast.challengers.lstm_nosent)}</dd>
+              </div>
+              <div>
                 <dt>India VIX, which includes overnight moves</dt>
                 <dd>±{move(forecast.references.vix_implied)}</dd>
               </div>
@@ -103,11 +115,11 @@ export function NextSessionForecast({ forecast, now }: { forecast: LiveForecast;
         <div className={styles.caveats}>
           <h2 className="kicker">Read this before relying on it</h2>
           <p>
-            <strong>The 99% VaR has run too low.</strong> On the later check, losses passed it on {record.var99_breaches} of {record.n_days} days, against about {Math.round(record.var99_expected_breaches)} expected, so don't treat it as a limit.
+            <strong>The 99% VaR has run too low.</strong> On the later check, losses passed it on {record.var99_breaches} of {record.n_days} days, against about {Math.round(record.var99_expected_breaches)} expected, so don't treat it as a limit. Two candidates are being tried against new days and haven't been judged yet: a calibrated line at {formatPct(forecast.var99_candidates.calibrated * 100)} and GARCH's at {formatPct(forecast.var99_candidates.garch * 100)}.
           </p>
           <p>It covers the session only, so a gap at the open comes on top.</p>
           <p>
-            The prices come from Yahoo's unofficial 5-minute feed, not the feed the model was trained on. VIX, turnover and holidays come from NSE. This forecast is in none of the scores on this page, and it isn't trading advice.
+            The prices come from Yahoo's unofficial 5-minute feed, not the feed the model was trained on. VIX, turnover and holidays come from NSE. This forecast is in none of the study's scores, the forward record scores it once its session has closed, and it isn't trading advice.
           </p>
           <p className={styles.made}>
             Made at {forecast.made_at.slice(11, 16)} IST on {formatDate(forecast.made_at.slice(0, 10))}, by the same frozen model as the later check.

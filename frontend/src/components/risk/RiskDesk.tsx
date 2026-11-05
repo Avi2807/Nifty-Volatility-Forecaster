@@ -10,7 +10,7 @@ import { EmptyState } from "../feedback/EmptyState";
 import { ErrorState } from "../feedback/ErrorState";
 import { Skeleton } from "../feedback/Skeleton";
 import { Section } from "../layout/Section";
-import { KupiecPanel } from "./KupiecPanel";
+import { BreachPanel } from "./BreachPanel";
 import styles from "./RiskDesk.module.css";
 
 const COLUMNS: TableColumn<VarPoint>[] = [
@@ -114,7 +114,7 @@ export function RiskDesk({ rows, selectedDate, onSelect }: RiskDeskProps) {
               </li>
             </ul>
           </div>
-          <KupiecPanel response={data} />
+          <BreachPanel response={data} />
         </div>
       )}
       {data && (

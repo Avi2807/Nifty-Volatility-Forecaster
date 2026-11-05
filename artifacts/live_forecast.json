@@ -1,43 +1,52 @@
 {
   "data_source": "real",
-  "made_at": "2026-11-03T19:42:05+05:30",
+  "made_at": "2026-11-05T10:37:45+05:30",
   "model": "transformer_nosent",
-  "date": "2026-11-03",
-  "target_date": "2026-11-04",
-  "forecast": -10.248119434842573,
+  "date": "2026-11-04",
+  "target_date": "2026-11-05",
+  "forecast": -10.158286375123383,
   "seed_forecasts": [
-    -10.314702886229142,
-    -10.159763855489476,
-    -10.269891562809105
+    -10.502775057893485,
+    -10.181023223877206,
+    -9.791060843599457
   ],
   "references": {
-    "har": -10.282054812091868,
-    "naive": -10.451791999941037,
-    "vix_implied": -9.229901885485484
+    "har": -10.15921722046412,
+    "naive": -10.02870224452212,
+    "vix_implied": -9.298494826272243
   },
   "features": {
-    "log_rv": -10.451791999941037,
-    "log_rv_w": -10.264484766669614,
-    "log_rv_m": -9.948435303868301,
-    "parkinson": 6.935278818493339e-05,
-    "ret": 0.01566321559436504,
+    "log_rv": -10.02870224452212,
+    "log_rv_w": -10.281033896404264,
+    "log_rv_m": -9.974170857251849,
+    "parkinson": 4.286708182597463e-05,
+    "ret": 0.006269455624886096,
     "ret_neg": 0.0,
-    "gap": 0.006016183256489144,
-    "log_vix": 2.7549337870010606,
-    "log_turnover_ratio": 0.2748970566471522,
+    "gap": -0.0032263870137272735,
+    "log_vix": 2.7206373166076814,
+    "log_turnover_ratio": 0.13183739132231295,
     "expiry_next": 0.0,
     "dow_mon": 0.0,
-    "dow_tue": 1.0,
-    "dow_wed": 0.0,
+    "dow_tue": 0.0,
+    "dow_wed": 1.0,
     "dow_thu": 0.0,
     "dow_fri": 0.0
   },
-  "first_session": "2026-08-07",
-  "sessions_used": 60,
-  "var99": 0.013867719887474848,
-  "nifty_close": 23810.85,
-  "india_vix": 15.72,
-  "turnover_crore": 40323.17,
+  "first_session": "2026-08-11",
+  "sessions_used": 59,
+  "var99": 0.014504810586601826,
+  "challengers": {
+    "garch": -9.616220187153594,
+    "mlp_nosent": -10.462983883301998,
+    "lstm_nosent": -10.18258726207621
+  },
+  "var99_candidates": {
+    "calibrated": 0.02104329897035531,
+    "garch": 0.01902042597413572
+  },
+  "nifty_close": 23960.6,
+  "india_vix": 15.19,
+  "turnover_crore": 35362.65,
   "track_record": {
     "n_days": 705,
     "first_date": "2023-07-03",
@@ -51,7 +60,7 @@
   },
   "sources": {
     "bars": "https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=5m&range=60d",
-    "closing_file": "https://nsearchives.nseindia.com/content/indices/ind_close_all_03112026.csv",
+    "closing_file": "https://nsearchives.nseindia.com/content/indices/ind_close_all_04112026.csv",
     "holidays": "https://www.nseindia.com/api/holiday-master?type=trading"
   }
 }

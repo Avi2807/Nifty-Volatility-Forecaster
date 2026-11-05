@@ -220,6 +220,9 @@ export interface LiveForecast {
   first_session: string;
   sessions_used: number;
   var99: number;
+  challengers: Record<ChallengerName, number>;
+  /** Tried alongside the rule, and judged only on days after they were set. */
+  var99_candidates: { calibrated: number; garch: number };
   nifty_close: number;
   india_vix: number;
   turnover_crore: number;
@@ -312,11 +315,57 @@ export interface DateRange {
   end?: string;
 }
 
+export type ChallengerName = "garch" | "mlp_nosent" | "lstm_nosent";
+export type RecordModel = "transformer_nosent" | "har" | "naive" | "vix_implied" | ChallengerName;
+export type VarLine = "rule" | "calibrated" | "garch";
+
+/** One forecast from the live code. `null` means that figure didn't exist when the row was saved, or the session hasn't happened. */
+export interface ForwardRow {
+  date: string;
+  target_date: string;
+  made_at: string;
+  /** "live" was saved before its session opened. Anything later is "backfilled", and isn't live evidence. */
+  kind: "live" | "backfilled";
+  forecasts: Record<RecordModel, number | null>;
+  var99: Record<VarLine, number | null>;
+  actual_log_rv: number | null;
+  return_oc: number | null;
+}
+
+export interface ForwardScores {
+  n_days: number;
+  models: Record<RecordModel, { n_days: number; mse_log_rv: number | null; qlike: number | null }>;
+  var99: Record<VarLine, { n_days: number; breaches: number; expected_breaches: number }>;
+}
+
+export interface ChallengerSummary {
+  data_source: DataSource;
+  later_check: {
+    n_days: number;
+    target_dates: [string, string];
+    models: Record<ChallengerName, ModelScore>;
+    diebold_mariano: DieboldMarianoTest[];
+    bonferroni_limit: number;
+  };
+  calibrated_var: { model: string; multiplier: number; rule_multiplier: number; n_days: number; fitted_on: [string, string] };
+}
+
+export interface ForwardRecord {
+  data_source: DataSource;
+  updated_at: string;
+  calibrated_multiplier: number;
+  rule_multiplier: number;
+  rows: ForwardRow[];
+  scores: { live: ForwardScores; backfilled: ForwardScores };
+  challengers: ChallengerSummary | null;
+}
+
 export interface ApiClient {
   summary(): Promise<SummaryResponse>;
   forecasts(range?: DateRange, models?: ModelName[]): Promise<ForecastsResponse>;
   later(): Promise<LaterResponse>;
   live(): Promise<LiveForecast>;
+  forward(): Promise<ForwardRecord>;
   day(date: string): Promise<DayDetails>;
   valueAtRisk(model: ModelName): Promise<VarResponse>;
   sentiment(range?: DateRange): Promise<SentimentResponse>;
